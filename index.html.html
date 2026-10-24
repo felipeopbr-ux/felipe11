@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felipe Fernandes | Finanças Pessoais</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#f5c84c',
+                            500: '#e5b842',
+                            600: '#c2962d',
+                        },
+                        dark: {
+                            bg: '#0d0e12',
+                            card: '#16181f',
+                            border: '#222633',
+                            hover: '#1d202b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0e12;
+            color: #f3f4f6;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0e12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222633;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e5b842;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-100 min-h-screen flex flex-col md:flex-row antialiased selection:bg-gold-500 selection:text-black">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between p-4 bg-dark-card border-b border-dark-border sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-gold-500/20">
+                FF
+            </div>
+            <div>
+                <h1 class="font-bold text-base text-white leading-tight">Felipe Fernandes</h1>
+                <p class="text-xs text-gold-500 font-medium">Finanças Pessoais</p>
+            </div>
+        </div>
+        <button id="mobileMenuBtn" class="text-gray-400 hover:text-white p-2 focus:outline-none">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 z-40 hidden md:hidden backdrop-blur-sm"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-dark-card border-r border-dark-border flex flex-col z-50 justify-between min-h-screen">
+        <div>
+            <!-- Brand Logo -->
+            <div class="p-6 hidden md:flex items-center space-x-3 border-b border-dark-border/50">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-600 to-gold-400 flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-gold-500/20">
+                    FF
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white leading-tight">Felipe Fernandes</h1>
+                    <p class="text-xs text-gold-500 font-semibold uppercase tracking-wider">Finanças Pessoais</p>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="mt-6 px-3 space-y-1">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-gold-500 bg-gold-500/10 border border-gold-500/20">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="switchTab('incomes')" id="nav-incomes" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-400 hover:text-emerald-400 hover:bg-dark-hover transition-all duration-200">
+                    <!-- Income Logo Badge -->
+                    <span class="w-5 h-5 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </span>
+                    <span>Entradas</span>
+                </button>
+                <button onclick="switchTab('expenses')" id="nav-expenses" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-400 hover:text-rose-400 hover:bg-dark-hover transition-all duration-200">
+                    <!-- Expense Logo Badge -->
+                    <span class="w-5 h-5 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </span>
+                    <span>Gastos</span>
+                </button>
+                <button onclick="switchTab('piggybanks')" id="nav-piggybanks" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-400 hover:text-white hover:bg-dark-hover transition-all duration-200">
+                    <i class="fa-solid fa-piggy-bank w-5 text-center"></i>
+                    <span>Cofrinhos</span>
+                </button>
+<button onclick="switchTab('history')" id="nav-history" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-400 hover:text-white hover:bg-dark-hover transition-all duration-200">
+                    <i class="fa-solid fa-list-check w-5 text-center"></i>
+                    <span>Histórico Central</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer / Backup Buttons -->
+        <div class="p-4 border-t border-dark-border/50 space-y-2">
+            <div class="px-2 py-1 text-xs text-gray-500 font-medium">SISTEMA DE BACKUP</div>
+            <button onclick="exportData()" class="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs font-medium bg-dark-border hover:bg-gray-800 text-gray-300 rounded-lg transition">
+                <i class="fa-solid fa-download"></i>
+                <span>Exportar JSON</span>
+            </button>
+            <label class="w-full flex items-center justify-center space-x-2 px-3 py-2 text-xs font-medium bg-dark-border hover:bg-gray-800 text-gray-300 rounded-lg transition cursor-pointer">
+                <i class="fa-solid fa-upload"></i>
+                <span>Importar JSON</span>
+                <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+            </label>
+            <div class="pt-2 text-center text-[10px] text-gray-600">
+                Felipe Fernandes v2.0 • Offline Ready
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+        
+        <!-- Header bar with Filter and Dynamic Icon Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-dark-border">
+            <div class="flex items-center space-x-3">
+                <div id="pageHeaderLogo" class="w-12 h-12 rounded-2xl bg-gold-500/10 text-gold-500 border border-gold-500/20 flex items-center justify-center text-xl shadow-lg">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div>
+                    <h2 id="pageTitle" class="text-2xl font-bold text-white tracking-tight">Dashboard</h2>
+                    <p id="pageSubtitle" class="text-xs text-gray-400 mt-0.5">Visão geral do seu patrimônio e fluxo financeiro</p>
+                </div>
+            </div>
+            
+            <!-- Global Month/Year Filter -->
+            <div class="flex items-center space-x-2 bg-dark-card border border-dark-border p-1.5 rounded-xl self-start sm:self-auto">
+                <i class="fa-regular fa-calendar text-gold-500 pl-2 text-sm"></i>
+                <select id="filterMonth" onchange="updateDashboard()" class="bg-transparent text-xs text-gray-200 focus:outline-none cursor-pointer pr-1">
+                    <option value="all" class="bg-dark-card">Todos os Meses</option>
+                    <option value="0" class="bg-dark-card">Janeiro</option>
+                    <option value="1" class="bg-dark-card">Fevereiro</option>
+                    <option value="2" class="bg-dark-card">Março</option>
+                    <option value="3" class="bg-dark-card">Abril</option>
+                    <option value="4" class="bg-dark-card">Maio</option>
+                    <option value="5" class="bg-dark-card">Junho</option>
+                    <option value="6" class="bg-dark-card">Julho</option>
+                    <option value="7" class="bg-dark-card">Agosto</option>
+                    <option value="8" class="bg-dark-card">Setembro</option>
+                    <option value="9" class="bg-dark-card">Outubro</option>
+                    <option value="10" class="bg-dark-card">Novembro</option>
+                    <option value="11" class="bg-dark-card">Dezembro</option>
+                </select>
+                <select id="filterYear" onchange="updateDashboard()" class="bg-transparent text-xs text-gray-200 focus:outline-none cursor-pointer border-l border-dark-border pl-2 pr-1">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="fixed top-5 right-5 z-50 hidden transform transition-all duration-300">
+            <div id="toastContent" class="flex items-center space-x-3 px-4 py-3 rounded-xl shadow-2xl bg-dark-card border text-sm font-medium"></div>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            
+            <!-- Key Metrics Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Saldo Total -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-5 relative overflow-hidden group hover:border-gold-500/50 transition duration-300">
+                    <div class="flex items-center justify-between text-gray-400 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Saldo Líquido</span>
+                        <div class="w-8 h-8 rounded-lg bg-gold-500/10 text-gold-500 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-white tracking-tight" id="dashTotalBalance">R$ 0,00</div>
+                    <p class="text-[11px] text-gray-500 mt-2">Disponível livre</p>
+                </div>
+
+                <!-- Entradas do Mês -->
+                <div onclick="switchTab('incomes')" class="bg-dark-card border border-dark-border rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/50 transition duration-300 cursor-pointer">
+                    <div class="flex items-center justify-between text-gray-400 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Entradas</span>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold shadow-sm shadow-emerald-500/20">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-emerald-400 tracking-tight" id="dashIncome">R$ 0,00</div>
+                    <p class="text-[11px] text-gray-500 mt-2" id="dashIncomeSub">Clique para gerenciar entradas &rarr;</p>
+                </div>
+
+                <!-- Gastos do Mês -->
+                <div onclick="switchTab('expenses')" class="bg-dark-card border border-dark-border rounded-2xl p-5 relative overflow-hidden group hover:border-rose-500/50 transition duration-300 cursor-pointer">
+                    <div class="flex items-center justify-between text-gray-400 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Gastos</span>
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm font-bold shadow-sm shadow-rose-500/20">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-rose-400 tracking-tight" id="dashExpense">R$ 0,00</div>
+                    <p class="text-[11px] text-gray-500 mt-2" id="dashExpenseSub">Clique para gerenciar gastos &rarr;</p>
+                </div>
+
+                <!-- Total Cofrinhos -->
+                <div onclick="switchTab('piggybanks')" class="bg-dark-card border border-dark-border rounded-2xl p-5 relative overflow-hidden group hover:border-blue-500/50 transition duration-300 cursor-pointer">
+                    <div class="flex items-center justify-between text-gray-400 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Em Cofrinhos</span>
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-blue-400 tracking-tight" id="dashPiggyTotal">R$ 0,00</div>
+                    <p class="text-[11px] text-gray-500 mt-2">Guardado / Reservado</p>
+                </div>
+
+                <!-- Progresso Metas -->
+                <div onclick="switchTab('piggybanks')" class="bg-dark-card border border-dark-border rounded-2xl p-5 relative overflow-hidden group hover:border-purple-500/50 transition duration-300 cursor-pointer">
+                    <div class="flex items-center justify-between text-gray-400 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Progresso Metas</span>
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-bold text-purple-400 tracking-tight" id="dashGoalsProgress">0%</div>
+                    <div class="w-full bg-dark-border h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div id="dashGoalsProgressBar" class="bg-purple-500 h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Native Canvas Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Bar Chart: Fluxo Mensal -->
+                <div class="lg:col-span-2 bg-dark-card border border-dark-border rounded-2xl p-6 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Comparativo de Fluxo de Caixa</h3>
+                            <p class="text-xs text-gray-400">Entradas vs Gastos por Mês</p>
+                        </div>
+                        <div class="flex items-center space-x-4 text-xs font-medium">
+                            <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span><span>Entradas</span></span>
+                            <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span><span>Gastos</span></span>
+                        </div>
+                    </div>
+                    <div class="w-full h-64 relative flex items-center justify-center">
+                        <canvas id="barChartCanvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+
+                <!-- Donut Chart: Gastos por Categoria -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-6 flex flex-col justify-between">
+                    <div class="mb-4">
+                        <h3 class="text-base font-bold text-white">Gastos por Categoria</h3>
+                        <p class="text-xs text-gray-400">Distribuição no período</p>
+                    </div>
+                    <div class="w-full h-52 relative flex items-center justify-center">
+                        <canvas id="donutChartCanvas" class="w-full h-full"></canvas>
+                    </div>
+                    <div id="donutLegend" class="mt-4 grid grid-cols-2 gap-2 text-xs">
+                        <!-- Dynamic Legend -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Widget -->
+            <div class="bg-dark-card border border-dark-border rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-bold text-white">Últimas Movimentações</h3>
+                    <button onclick="switchTab('history')" class="text-xs text-gold-500 hover:underline font-medium">Ver Histórico Completo &rarr;</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-gray-400 border-b border-dark-border uppercase">
+                            <tr>
+                                <th class="pb-3 font-semibold">Tipo</th>
+                                <th class="pb-3 font-semibold">Descrição</th>
+                                <th class="pb-3 font-semibold">Categoria / Origem</th>
+                                <th class="pb-3 font-semibold">Data</th>
+                                <th class="pb-3 font-semibold text-right">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashRecentTable" class="divide-y divide-dark-border/50 text-gray-300">
+                            <!-- Populated Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ENTRADAS (INCOME) -->
+        <section id="tab-incomes" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add Income Form -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-6 shadow-xl lg:col-span-1">
+                    <div class="flex items-center space-x-3 mb-6 pb-3 border-b border-dark-border">
+                        <!-- Income Green Logo Icon -->
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-lg shadow-lg shadow-emerald-500/20">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">Nova Entrada</h3>
+                            <p class="text-xs text-emerald-400 font-medium">Cadastrar Ganho / Receita</p>
+                        </div>
+                    </div>
+                    <form id="incomeForm" onsubmit="addIncome(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Descrição</label>
+                            <input type="text" id="incDesc" required placeholder="Ex: Salário, Projeto Extra, YouTube..." class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Valor (R$)</label>
+                            <input type="number" step="0.01" id="incAmount" required placeholder="0,00" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Data de Recebimento</label>
+                            <input type="date" id="incDate" required class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Categoria de Origem</label>
+                            <select id="incCategory" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                                <option value="Salário">Salário</option>
+                                <option value="YouTube">YouTube</option>
+                                <option value="Serviços Extras">Serviços Extras</option>
+                                <option value="Presentes">Presentes</option>
+                                <option value="Reembolsos">Reembolsos</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-2.5 rounded-xl text-xs transition shadow-lg shadow-emerald-500/20 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-plus-circle text-sm"></i>
+                            <span>Registrar Entrada</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Income List & Summary Table -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-white">Lista de Entradas Cadastradas</h3>
+                        </div>
+                        <span id="incomeCountBadge" class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">0 Registros</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="text-gray-400 border-b border-dark-border uppercase bg-dark-bg/50">
+                                <tr>
+                                    <th class="p-3">Logo / Origem</th>
+                                    <th class="p-3">Descrição</th>
+                                    <th class="p-3">Data</th>
+                                    <th class="p-3 text-right">Valor (R$)</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomeTableBody" class="divide-y divide-dark-border/50 text-gray-300">
+                                <!-- Populated Dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: GASTOS (EXPENSES) -->
+        <section id="tab-expenses" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add Expense Form -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-6 shadow-xl lg:col-span-1">
+                    <div class="flex items-center space-x-3 mb-6 pb-3 border-b border-dark-border">
+                        <!-- Expense Red Logo Icon -->
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-lg shadow-lg shadow-rose-500/20">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white">Novo Gasto</h3>
+                            <p class="text-xs text-rose-400 font-medium">Cadastrar Despesa / Saída</p>
+                        </div>
+                    </div>
+                    <form id="expenseForm" onsubmit="addExpense(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Descrição</label>
+                            <input type="text" id="expDesc" required placeholder="Ex: Supermercado, Uber, Curso..." class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Valor (R$)</label>
+                            <input type="number" step="0.01" id="expAmount" required placeholder="0,00" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Data</label>
+                            <input type="date" id="expDate" required class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-rose-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Categoria</label>
+                                <select id="expCategory" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-rose-500">
+                                    <option value="Alimentação">Alimentação</option>
+                                    <option value="Transporte">Transporte</option>
+                                    <option value="Lazer">Lazer</option>
+                                    <option value="Compras">Compras</option>
+                                    <option value="Assinaturas">Assinaturas</option>
+                                    <option value="Estudos">Estudos</option>
+                                    <option value="Contas">Contas</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Forma Pagamento</label>
+                                <select id="expMethod" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-rose-500">
+                                    <option value="Pix">Pix</option>
+                                    <option value="Cartão de Débito">Cartão Débito</option>
+                                    <option value="Cartão de Crédito">Cartão Crédito</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg shadow-rose-500/20 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-minus-circle text-sm"></i>
+                            <span>Registrar Gasto</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Expense List & Summary Table -->
+                <div class="bg-dark-card border border-dark-border rounded-2xl p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </div>
+                            <h3 class="text-base font-bold text-white">Lista de Gastos Cadastrados</h3>
+                        </div>
+                        <span id="expenseCountBadge" class="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">0 Registros</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="text-gray-400 border-b border-dark-border uppercase bg-dark-bg/50">
+                                <tr>
+                                    <th class="p-3">Logo / Categoria</th>
+                                    <th class="p-3">Descrição</th>
+                                    <th class="p-3">Data</th>
+                                    <th class="p-3 text-right">Valor (R$)</th>
+                                    <th class="p-3 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseTableBody" class="divide-y divide-dark-border/50 text-gray-300">
+                                <!-- Populated Dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: COFRINHOS (PIGGYBANKS) -->
+        <section id="tab-piggybanks" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-dark-card border border-dark-border p-6 rounded-2xl">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Cofrinhos e metas</h3>
+                    <p class="text-xs text-gray-400 mt-1">Cada cofrinho já é uma meta: defina o valor que quer alcançar e acompanhe o progresso.</p>
+                </div>
+                <button onclick="openPiggyModal()" class="bg-gold-500 hover:bg-gold-600 text-black font-semibold px-4 py-2.5 rounded-xl text-xs transition shadow-lg shadow-gold-500/20 flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Criar Cofrinho</span>
+                </button>
+            </div>
+
+            <div class="bg-dark-card border border-dark-border rounded-2xl p-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div><h3 class="text-base font-bold text-white">Organização mensal</h3><p class="text-xs text-gray-400 mt-1">Consulte as movimentações de cada mês. O histórico fica registrado e o saldo acumulado segue para os meses seguintes.</p></div>
+                    <div class="flex gap-2"><select id="piggyMonthFilter" onchange="renderPiggyMonthly()" class="bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white"><option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option><option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option><option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option><option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option></select><select id="piggyYearFilter" onchange="renderPiggyMonthly()" class="bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white"></select></div>
+                </div>
+                <div id="piggyMonthlySummary" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+                <div class="mt-4 overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-gray-400 border-b border-dark-border"><tr><th class="py-2">Cofrinho</th><th class="py-2">Movimentação</th><th class="py-2">Data</th><th class="py-2 text-right">Valor</th></tr></thead><tbody id="piggyMonthlyBody" class="divide-y divide-dark-border/50 text-gray-300"></tbody></table></div>
+            </div>
+
+            <!-- Piggybank Grid -->
+            <div id="piggyGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Populated Dynamically -->
+            </div>
+
+            <div class="bg-dark-card border border-dark-border rounded-2xl p-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <div><h3 class="text-base font-bold text-white">Evolução financeira por mês</h3><p class="text-xs text-gray-400 mt-1">Acompanhe os cofrinhos e o resultado mensal (entradas menos gastos). O saldo líquido zera a cada mês. A visualização começa em setembro.</p></div>
+                    <span id="piggyEvolutionYearLabel" class="text-xs text-gold-500 font-semibold"></span>
+                </div>
+                <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-gray-400 border-b border-dark-border"><tr><th class="py-2">Mês</th><th class="py-2 text-right">Entradas líquidas nos cofrinhos</th><th class="py-2 text-right">Saldo em cofrinhos</th><th class="py-2 text-right">Saldo líquido do mês</th></tr></thead><tbody id="piggyEvolutionBody" class="divide-y divide-dark-border/50 text-gray-300"></tbody></table></div>
+            </div>
+
+
+        </section>
+<!-- TAB 6: CENTRAL HISTORY -->
+        <section id="tab-history" class="tab-content hidden space-y-6">
+            <div class="bg-dark-card border border-dark-border rounded-2xl p-6">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                    <h3 class="text-lg font-bold text-white">Histórico de Transações</h3>
+                    
+                    <!-- Search & Filter Controls -->
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-500 text-xs"></i>
+                            <input type="text" id="histSearch" oninput="renderHistoryTable()" placeholder="Buscar por descrição..." class="w-full bg-dark-bg border border-dark-border rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                        </div>
+                        <select id="histTypeFilter" onchange="renderHistoryTable()" class="bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                            <option value="all">Todos os Tipos</option>
+                            <option value="income">Apenas Entradas</option>
+                            <option value="expense">Apenas Gastos</option>
+                            <option value="piggy">Cofrinhos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="text-gray-400 border-b border-dark-border uppercase bg-dark-bg/50">
+                            <tr>
+                                <th class="p-3 font-semibold">Tipo</th>
+                                <th class="p-3 font-semibold">Descrição</th>
+                                <th class="p-3 font-semibold">Categoria / Detalhes</th>
+                                <th class="p-3 font-semibold">Data</th>
+                                <th class="p-3 font-semibold text-right">Valor</th>
+                                <th class="p-3 font-semibold text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="divide-y divide-dark-border/50 text-gray-300">
+                            <!-- Populated Dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODALS -->
+
+    <!-- Piggybank Create Modal -->
+    <div id="piggyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-dark-card border border-dark-border w-full max-w-md rounded-2xl p-6 relative">
+            <h3 class="text-lg font-bold text-white mb-4" id="piggyModalTitle">Novo Cofrinho</h3>
+            <form id="piggyForm" onsubmit="savePiggybank(event)" class="space-y-4">
+                <input type="hidden" id="piggyId">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Nome do Cofrinho</label>
+                    <input type="text" id="piggyName" required placeholder="Ex: Viagem, Reserva de Emergência" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label id="piggyInitialLabel" class="block text-xs text-gray-400 mb-1">Saldo Inicial (R$)</label>
+                        <input type="number" step="0.01" id="piggyInitial" placeholder="0,00" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Meta a alcançar (R$)</label>
+                        <input type="number" step="0.01" min="0" id="piggyTarget" placeholder="Ex: 15000" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Data limite (opcional)</label>
+                    <input type="date" id="piggyDeadline" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Descrição (opcional)</label>
+                    <input type="text" id="piggyDesc" placeholder="Ex: Comprar minha primeira moto" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Ícone / Categoria</label>
+                    <select id="piggyIcon" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                        <option value="fa-piggy-bank">🐷 Cofrinho</option>
+                        <option value="fa-car">🚗 Carro</option>
+                        <option value="fa-motorcycle">🏍️ Moto</option>
+                        <option value="fa-house">🏠 Casa</option>
+                        <option value="fa-plane">✈️ Viagem</option>
+                        <option value="fa-laptop">💻 Eletrônicos</option>
+                        <option value="fa-shield-halved">🛡️ Reserva</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePiggyModal()" class="px-4 py-2 rounded-xl text-xs text-gray-400 hover:text-white bg-dark-bg border border-dark-border">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-xs text-black font-semibold bg-gold-500 hover:bg-gold-600">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Piggybank Transaction (Deposit/Withdraw/Transfer) Modal -->
+    <div id="piggyTxModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-dark-card border border-dark-border w-full max-w-md rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-white mb-2" id="piggyTxTitle">Movimentar Cofrinho</h3>
+            <p class="text-xs text-gray-400 mb-4" id="piggyTxSub">Ajuste os valores guardados</p>
+            <form id="piggyTxForm" onsubmit="savePiggyTransaction(event)" class="space-y-4">
+                <input type="hidden" id="piggyTxSourceId">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Tipo de Operação</label>
+                    <select id="piggyTxType" onchange="togglePiggyTxFields()" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                        <option value="deposit">Guardar (Adicionar do Saldo Líquido)</option>
+                        <option value="withdraw">Resgatar (Retirar para o Saldo Líquido)</option>
+                        <option value="transfer">Transferir para outro Cofrinho</option>
+                    </select>
+                </div>
+                <div id="targetPiggyGroup" class="hidden">
+                    <label class="block text-xs text-gray-400 mb-1">Cofrinho de Destino</label>
+                    <select id="piggyTxTargetId" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Valor (R$)</label>
+                    <input type="number" step="0.01" id="piggyTxAmount" required placeholder="0,00" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Observação / Descrição</label>
+                    <input type="text" id="piggyTxDesc" placeholder="Ex: Aporte mensal" class="w-full bg-dark-bg border border-dark-border rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePiggyTxModal()" class="px-4 py-2 rounded-xl text-xs text-gray-400 hover:text-white bg-dark-bg border border-dark-border">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded-xl text-xs text-black font-semibold bg-gold-500 hover:bg-gold-600">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Piggybank History Modal -->
+    <div id="piggyHistModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-dark-card border border-dark-border w-full max-w-lg rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base font-bold text-white" id="piggyHistTitle">Histórico do Cofrinho</h3>
+                <button onclick="closePiggyHistModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="max-h-80 overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="text-gray-400 border-b border-dark-border">
+                        <tr>
+                            <th class="pb-2">Data</th>
+                            <th class="pb-2">Tipo</th>
+                            <th class="pb-2">Descrição</th>
+                            <th class="pb-2 text-right">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="piggyHistBody" class="divide-y divide-dark-border/50 text-gray-300"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Management
+        let appState = {
+            transactions: [],
+            piggybanks: [],
+            piggyLogs: []
+        };
+
+        const STORAGE_KEY = 'felipe_fernandes_finance_db';
+
+        // Load & Save Data
+        function loadData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                try {
+                    appState = JSON.parse(data);
+                    appState.transactions = appState.transactions || [];
+                    appState.piggybanks = appState.piggybanks || [];
+                    appState.piggyLogs = appState.piggyLogs || [];
+                    // Migra metas antigas para cofrinhos para manter tudo em uma única função.
+                    (appState.goals || []).forEach(g => {
+                        if (!appState.piggybanks.some(p => p.id === 'goal_' + g.id)) {
+                            const migratedId = 'goal_' + g.id;
+                            const current = Number(g.current) || 0;
+                            appState.piggybanks.push({ id: migratedId, name: g.title || 'Meta', amount: current, target: Number(g.target) || 0, deadline: g.deadline || '', desc: g.desc || '', icon: 'fa-bullseye' });
+                            if (current > 0) appState.piggyLogs.push({ id: 'migration_' + g.id, piggyId: migratedId, type: 'deposit', amount: current, desc: 'Saldo inicial migrado da meta', date: new Date().toISOString().split('T')[0] });
+                        }
+                    });
+                    appState.goals = [];
+                    saveData();
+                } catch(e) {
+                    console.error("Erro ao carregar dados", e);
+                }
+            } else {
+                // Initial Default Data
+                appState = {
+                    transactions: [
+                        { id: '1', type: 'income', desc: 'Projeto Freelance', amount: 1500, date: '2026-10-10', category: 'Serviços Extras' },
+                        { id: '2', type: 'expense', desc: 'Assinatura Alura/Cursos', amount: 89.90, date: '2026-10-12', category: 'Estudos', method: 'Cartão de Crédito' }
+                    ],
+                    piggybanks: [
+                        { id: 'p1', name: 'Reserva de Emergência', amount: 500, icon: 'fa-shield-halved' }
+                    ],
+                    piggyLogs: [
+                        { id: 'pl1', piggyId: 'p1', type: 'deposit', amount: 500, desc: 'Aporte Inicial', date: '2026-10-01' }
+                    ]
+                };
+                saveData();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        }
+
+        // Importa os lançamentos reais de setembro/2026 uma única vez, sem duplicar registros já existentes.
+        function importSeptember2026Transactions() {
+            const september = [
+                { id: 'sep2026_income_salary', type: 'income', desc: 'Salário', amount: 738.00, date: '2026-09-04', category: 'Trabalho' },
+                { id: 'sep2026_expense_haircut', type: 'expense', desc: 'Corte de cabelo', amount: 35.00, date: '2026-09-05', category: 'Lazer' },
+                { id: 'sep2026_expense_tiktok_1', type: 'expense', desc: 'Tik Tok Shop', amount: 11.33, date: '2026-09-10', category: 'Compras' },
+                { id: 'sep2026_expense_mel_1', type: 'expense', desc: 'Mel MilkShake', amount: 10.00, date: '2026-09-12', category: 'Alimentação' },
+                { id: 'sep2026_income_malumalibu', type: 'income', desc: 'Pagamento MaluMalibu', amount: 154.60, date: '2026-09-14', category: 'Outros' },
+                { id: 'sep2026_expense_supermarket_1', type: 'expense', desc: 'Supermercado', amount: 54.00, date: '2026-09-14', category: 'Alimentação' },
+                { id: 'sep2026_expense_supermarket_2', type: 'expense', desc: 'Supermercado', amount: 20.25, date: '2026-09-14', category: 'Alimentação' },
+                { id: 'sep2026_expense_school_canteen', type: 'expense', desc: 'Cantina Escola', amount: 19.00, date: '2026-09-15', category: 'Alimentação' },
+                { id: 'sep2026_expense_tiktok_2', type: 'expense', desc: 'Tik Tok Shop', amount: 127.92, date: '2026-09-16', category: 'Compras' },
+                { id: 'sep2026_expense_realmix', type: 'expense', desc: 'RealMix', amount: 28.40, date: '2026-09-17', category: 'Compras' },
+                { id: 'sep2026_expense_mel_2', type: 'expense', desc: 'Mel MilkShake', amount: 20.00, date: '2026-09-18', category: 'Alimentação' },
+                { id: 'sep2026_income_hotmart', type: 'income', desc: 'Hotmart', amount: 150.00, date: '2026-09-19', category: 'Empresa' },
+                { id: 'sep2026_expense_mercadolivre', type: 'expense', desc: 'Mercado Livre', amount: 41.24, date: '2026-09-19', category: 'Compras' },
+                { id: 'sep2026_expense_rocha', type: 'expense', desc: 'Rocha Salgados', amount: 45.00, date: '2026-09-19', category: 'Alimentação' },
+                { id: 'sep2026_expense_supermarket_3', type: 'expense', desc: 'Supermercado', amount: 39.00, date: '2026-09-19', category: 'Alimentação' },
+                { id: 'sep2026_income_youtube', type: 'income', desc: 'YouTube', amount: 700.00, date: '2026-09-26', category: 'Empresa' },
+                { id: 'sep2026_expense_other', type: 'expense', desc: 'Gasto', amount: 110.00, date: '2026-09-30', category: 'Outros' }
+            ];
+            let added = false;
+            september.forEach(tx => {
+                const exists = appState.transactions.some(existing =>
+                    existing.type === tx.type && existing.date === tx.date &&
+                    (existing.desc || existing.description || '').trim().toLowerCase() === tx.desc.toLowerCase() &&
+                    Math.abs(Number(existing.amount) - tx.amount) < 0.005
+                );
+                if (!exists) {
+                    appState.transactions.push(tx);
+                    added = true;
+                }
+            });
+            if (added) saveData();
+        }
+
+        // Initialize App
+        window.onload = function() {
+            loadData();
+            importSeptember2026Transactions();
+            initYearFilter();
+            initPiggyMonthFilter();
+            setTodayDates();
+            updateDashboard();
+            setupMobileMenu();
+        };
+
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggle() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            btn.addEventListener('click', toggle);
+            overlay.addEventListener('click', toggle);
+        }
+
+        function initYearFilter() {
+            const select = document.getElementById('filterYear');
+            const currentYear = new Date().getFullYear();
+            select.innerHTML = '';
+            for (let y = currentYear - 2; y <= currentYear + 2; y++) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                opt.className = 'bg-dark-card';
+                if (y === currentYear) opt.selected = true;
+                select.appendChild(opt);
+            }
+        }
+
+        function setTodayDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('incDate').value = today;
+            document.getElementById('expDate').value = today;
+        }
+
+        // Tab Navigation & Visual Header Config
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm text-gray-400 hover:text-white hover:bg-dark-hover transition-all duration-200';
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                if (tabId === 'incomes') {
+                    activeNav.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20';
+                } else if (tabId === 'expenses') {
+                    activeNav.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-rose-400 bg-rose-500/10 border border-rose-500/20';
+                } else {
+                    activeNav.className = 'nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 text-gold-500 bg-gold-500/10 border border-gold-500/20';
+                }
+            }
+
+            const headerConfig = {
+                dashboard: {
+                    title: 'Dashboard',
+                    subtitle: 'Visão geral do seu patrimônio e fluxo financeiro',
+                    icon: '<i class="fa-solid fa-chart-pie"></i>',
+                    style: 'bg-gold-500/10 text-gold-500 border-gold-500/20'
+                },
+                incomes: {
+                    title: 'Entradas de Dinheiro',
+                    subtitle: 'Gestão completa de recebimentos, salários e ganhos extras',
+                    icon: '<i class="fa-solid fa-arrow-down"></i>',
+                    style: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                },
+                expenses: {
+                    title: 'Lista de Gastos',
+                    subtitle: 'Controle rigoroso de despesas e saídas operacionais',
+                    icon: '<i class="fa-solid fa-arrow-up"></i>',
+                    style: 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+                },
+                piggybanks: {
+                    title: 'Cofrinhos e Metas',
+                    subtitle: 'Organize seus objetivos e acompanhe as movimentações por mês',
+                    icon: '<i class="fa-solid fa-piggy-bank"></i>',
+                    style: 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                },
+                history: {
+                    title: 'Histórico Central',
+                    subtitle: 'Auditoria completa e busca de todas as movimentações',
+                    icon: '<i class="fa-solid fa-list-check"></i>',
+                    style: 'bg-gold-500/10 text-gold-500 border-gold-500/20'
+                }
+            };
+
+            if (headerConfig[tabId]) {
+                const cfg = headerConfig[tabId];
+                document.getElementById('pageTitle').textContent = cfg.title;
+                document.getElementById('pageSubtitle').textContent = cfg.subtitle;
+                const headerLogo = document.getElementById('pageHeaderLogo');
+                headerLogo.className = `w-12 h-12 rounded-2xl border flex items-center justify-center text-xl shadow-lg ${cfg.style}`;
+                headerLogo.innerHTML = cfg.icon;
+            }
+
+            if (tabId === 'dashboard') updateDashboard();
+            if (tabId === 'incomes') renderIncomesTable();
+            if (tabId === 'expenses') renderExpensesTable();
+            if (tabId === 'piggybanks') { renderPiggybanks(); renderPiggyMonthly(); }
+            if (tabId === 'history') renderHistoryTable();
+
+            // Close mobile menu
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.add('hidden');
+        }
+
+        // Helpers
+        function formatCurr(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            return dateStr;
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const content = document.getElementById('toastContent');
+            
+            const colorClass = type === 'success' ? 'text-emerald-400 border-emerald-500/30' : 'text-rose-400 border-rose-500/30';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            
+            content.className = `flex items-center space-x-3 px-4 py-3 rounded-xl shadow-2xl bg-dark-card border text-sm font-medium ${colorClass}`;
+            content.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // Transactions Management
+        function addIncome(e) {
+            e.preventDefault();
+            const desc = document.getElementById('incDesc').value;
+            const amount = parseFloat(document.getElementById('incAmount').value);
+            const date = document.getElementById('incDate').value;
+            const category = document.getElementById('incCategory').value;
+
+            appState.transactions.push({
+                id: Date.now().toString(),
+                type: 'income',
+                desc,
+                amount,
+                date,
+                category
+            });
+
+            saveData();
+            document.getElementById('incomeForm').reset();
+            setTodayDates();
+            renderIncomesTable();
+            updateDashboard();
+            showToast('Entrada registrada com sucesso!');
+        }
+
+        function addExpense(e) {
+            e.preventDefault();
+            const desc = document.getElementById('expDesc').value;
+            const amount = parseFloat(document.getElementById('expAmount').value);
+            const date = document.getElementById('expDate').value;
+            const category = document.getElementById('expCategory').value;
+            const method = document.getElementById('expMethod').value;
+
+            appState.transactions.push({
+                id: Date.now().toString(),
+                type: 'expense',
+                desc,
+                amount,
+                date,
+                category,
+                method
+            });
+
+            saveData();
+            document.getElementById('expenseForm').reset();
+            setTodayDates();
+            renderExpensesTable();
+            updateDashboard();
+            showToast('Gasto registrado com sucesso!');
+        }
+
+        function deleteTransaction(id) {
+            if (confirm('Deseja realmente excluir este registro?')) {
+                appState.transactions = appState.transactions.filter(t => t.id !== id);
+                saveData();
+                updateDashboard();
+                renderIncomesTable();
+                renderExpensesTable();
+                renderHistoryTable();
+                showToast('Registro removido.', 'error');
+            }
+        }
+
+        // RENDER INCOMES TAB
+        function renderIncomesTable() {
+            const tbody = document.getElementById('incomeTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const incomes = appState.transactions.filter(t => t.type === 'income').sort((a, b) => new Date(b.date) - new Date(a.date));
+            document.getElementById('incomeCountBadge').textContent = `${incomes.length} Registros`;
+
+            if (incomes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-gray-500">Nenhuma entrada cadastrada até o momento.</td></tr>`;
+                return;
+            }
+
+            incomes.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-dark-hover transition';
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </span>
+                            <span class="font-medium text-gray-300">${t.category}</span>
+                        </div>
+                    </td>
+                    <td class="p-3 font-semibold text-white">${t.desc}</td>
+                    <td class="p-3 text-gray-400">${formatDate(t.date)}</td>
+                    <td class="p-3 text-right font-bold text-emerald-400">+ ${formatCurr(t.amount)}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteTransaction('${t.id}')" class="text-gray-500 hover:text-rose-400 p-1 transition"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // RENDER EXPENSES TAB
+        function renderExpensesTable() {
+            const tbody = document.getElementById('expenseTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const expenses = appState.transactions.filter(t => t.type === 'expense').sort((a, b) => new Date(b.date) - new Date(a.date));
+            document.getElementById('expenseCountBadge').textContent = `${expenses.length} Registros`;
+
+            if (expenses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-gray-500">Nenhum gasto cadastrado até o momento.</td></tr>`;
+                return;
+            }
+
+            expenses.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-dark-hover transition';
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-arrow-up"></i>
+                            </span>
+                            <span class="font-medium text-gray-300">${t.category}</span>
+                        </div>
+                    </td>
+                    <td class="p-3 font-semibold text-white">${t.desc} <span class="text-[10px] text-gray-500 font-normal">(${t.method || 'Geral'})</span></td>
+                    <td class="p-3 text-gray-400">${formatDate(t.date)}</td>
+                    <td class="p-3 text-right font-bold text-rose-400">- ${formatCurr(t.amount)}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteTransaction('${t.id}')" class="text-gray-500 hover:text-rose-400 p-1 transition"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Calculations Filtered by Selected Month/Year
+        function getFilteredTransactions() {
+            const m = document.getElementById('filterMonth').value;
+            const y = document.getElementById('filterYear').value;
+
+            return appState.transactions.filter(t => {
+                if (!t.date) return true;
+                const d = new Date(t.date + 'T00:00:00');
+                const matchYear = d.getFullYear().toString() === y.toString();
+                const matchMonth = m === 'all' || d.getMonth().toString() === m.toString();
+                return matchYear && matchMonth;
+            });
+        }
+
+        // Dashboard Calculation & Render
+        function updateDashboard() {
+            const filtered = getFilteredTransactions();
+
+            const periodIncome = filtered.filter(t => t.type === 'income').reduce((a, b) => a + b.amount, 0);
+            const periodExpense = filtered.filter(t => t.type === 'expense').reduce((a, b) => a + b.amount, 0);
+
+            const totalPiggy = appState.piggybanks.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+
+            // Saldo líquido é somente o resultado do período selecionado, sem carregar meses anteriores.
+            const periodLiquidBalance = periodIncome - periodExpense;
+
+            const totalGoalTarget = appState.piggybanks.reduce((a, b) => a + (Number(b.target) || 0), 0);
+            const totalGoalCurrent = appState.piggybanks.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+            const goalsPct = totalGoalTarget > 0 ? Math.min(100, Math.round((totalGoalCurrent / totalGoalTarget) * 100)) : 0;
+            const selectedMonth = document.getElementById('filterMonth').value;
+            const selectedYear = Number(document.getElementById('filterYear').value);
+            const currentYear = new Date().getFullYear();
+            const periodPiggy = selectedMonth === 'all' ? (selectedYear === currentYear ? totalPiggy : getPiggyBalanceAtEndOfMonth(selectedYear, 11)) : getPiggyBalanceAtEndOfMonth(selectedYear, Number(selectedMonth));
+
+            document.getElementById('dashTotalBalance').textContent = formatCurr(periodLiquidBalance);
+            document.getElementById('dashIncome').textContent = formatCurr(periodIncome);
+            document.getElementById('dashExpense').textContent = formatCurr(periodExpense);
+            document.getElementById('dashPiggyTotal').textContent = formatCurr(periodPiggy);
+            document.getElementById('dashGoalsProgress').textContent = `${goalsPct}%`;
+            document.getElementById('dashGoalsProgressBar').style.width = `${goalsPct}%`;
+
+            renderRecentTable(filtered);
+            renderPiggyEvolution(selectedYear);
+            renderBarChart();
+            renderDonutChart(filtered);
+        }
+
+        function renderRecentTable(filteredList) {
+            const tbody = document.getElementById('dashRecentTable');
+            tbody.innerHTML = '';
+
+            const sorted = [...filteredList].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">Nenhuma movimentação registrada no período.</td></tr>`;
+                return;
+            }
+
+            sorted.forEach(t => {
+                const isInc = t.type === 'income';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-3">
+                        <span class="w-6 h-6 rounded-lg ${isInc ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} flex items-center justify-center text-[10px] font-bold inline-block">
+                            <i class="fa-solid ${isInc ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                        </span>
+                    </td>
+                    <td class="py-3 font-medium text-white">${t.desc}</td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded-md text-[10px] bg-dark-bg border border-dark-border">${t.category || '-'}</span></td>
+                    <td class="py-3 text-gray-400">${formatDate(t.date)}</td>
+                    <td class="py-3 text-right font-semibold ${isInc ? 'text-emerald-400' : 'text-rose-400'}">
+                        ${isInc ? '+' : '-'} ${formatCurr(t.amount)}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Native Canvas Bar Chart (Monthly Incomes vs Expenses)
+        function renderBarChart() {
+            const canvas = document.getElementById('barChartCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const year = document.getElementById('filterYear').value;
+
+            const monthlyData = months.map((_, index) => {
+                const inc = appState.transactions
+                    .filter(t => t.type === 'income' && new Date(t.date + 'T00:00:00').getFullYear().toString() === year && new Date(t.date + 'T00:00:00').getMonth() === index)
+                    .reduce((a, b) => a + b.amount, 0);
+                const exp = appState.transactions
+                    .filter(t => t.type === 'expense' && new Date(t.date + 'T00:00:00').getFullYear().toString() === year && new Date(t.date + 'T00:00:00').getMonth() === index)
+                    .reduce((a, b) => a + b.amount, 0);
+                return { inc, exp };
+            });
+
+            const maxVal = Math.max(...monthlyData.map(d => Math.max(d.inc, d.exp)), 100);
+            const padding = 30;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+            const barGroupWidth = chartWidth / 12;
+            const barWidth = Math.max(barGroupWidth * 0.3, 4);
+
+            ctx.strokeStyle = '#222633';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+
+            monthlyData.forEach((d, i) => {
+                const x = padding + i * barGroupWidth + barGroupWidth / 4;
+
+                // Income Bar (Emerald)
+                const incH = (d.inc / maxVal) * chartHeight;
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(x, height - padding - incH, barWidth, incH);
+
+                // Expense Bar (Rose)
+                const expH = (d.exp / maxVal) * chartHeight;
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillRect(x + barWidth + 2, height - padding - expH, barWidth, expH);
+
+                // Month Label
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '10px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(months[i], x + barWidth, height - padding + 15);
+            });
+        }
+
+        // Native Canvas Donut Chart (Expenses by Category)
+        function renderDonutChart(filtered) {
+            const canvas = document.getElementById('donutChartCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const radius = Math.min(width, height) / 2 - 10;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const expenses = filtered.filter(t => t.type === 'expense');
+            const catTotals = {};
+
+            expenses.forEach(e => {
+                catTotals[e.category] = (catTotals[e.category] || 0) + e.amount;
+            });
+
+            const total = Object.values(catTotals).reduce((a, b) => a + b, 0);
+
+            const colors = {
+                'Alimentação': '#f59e0b',
+                'Transporte': '#3b82f6',
+                'Lazer': '#ec4899',
+                'Compras': '#8b5cf6',
+                'Assinaturas': '#06b6d4',
+                'Estudos': '#10b981',
+                'Contas': '#f43f5e',
+                'Outros': '#6b7280'
+            };
+
+            const legendContainer = document.getElementById('donutLegend');
+            legendContainer.innerHTML = '';
+
+            if (total === 0) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.strokeStyle = '#222633';
+                ctx.lineWidth = 18;
+                ctx.stroke();
+
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('Sem gastos', centerX, centerY + 4);
+                return;
+            }
+
+            let startAngle = -0.5 * Math.PI;
+
+            Object.keys(catTotals).forEach(cat => {
+                const val = catTotals[cat];
+                const sliceAngle = (val / total) * 2 * Math.PI;
+                const color = colors[cat] || '#e5b842';
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 20;
+                ctx.stroke();
+
+                startAngle += sliceAngle;
+
+                const pct = Math.round((val / total) * 100);
+                legendContainer.innerHTML += `
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color:${color}"></span>
+                        <span class="text-gray-400 truncate">${cat}: <strong class="text-gray-200">${pct}%</strong></span>
+                    </div>
+                `;
+            });
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(formatCurr(total), centerX, centerY + 4);
+        }
+
+        function getPiggyBalanceAtEndOfMonth(year, monthIndex) {
+            const cutoff = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${new Date(year, monthIndex + 1, 0).getDate()}`;
+            return (appState.piggyLogs || []).filter(l => l.date && l.date <= cutoff).reduce((sum, l) => {
+                if (l.type === 'deposit' || l.type === 'transfer_in') return sum + (Number(l.amount) || 0);
+                if (l.type === 'withdraw' || l.type === 'transfer_out') return sum - (Number(l.amount) || 0);
+                return sum;
+            }, 0);
+        }
+
+        function renderPiggyEvolution(year) {
+            const body = document.getElementById('piggyEvolutionBody');
+            const label = document.getElementById('piggyEvolutionYearLabel');
+            if (!body || !label) return;
+            label.textContent = String(year);
+            body.innerHTML = '';
+            const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            const now = new Date();
+            let hasAny = false;
+            for (let index = 8; index < 12; index++) {
+                // Mostra todos os meses de setembro a dezembro, inclusive os futuros, para permitir planejamento.
+                const prefix = `${year}-${String(index + 1).padStart(2, '0')}`;
+                const monthLogs = (appState.piggyLogs || []).filter(l => (l.date || '').startsWith(prefix));
+                const deposits = monthLogs.filter(l => l.type === 'deposit' || l.type === 'transfer_in').reduce((sum,l) => sum + (Number(l.amount)||0), 0);
+                const withdrawals = monthLogs.filter(l => l.type === 'withdraw' || l.type === 'transfer_out').reduce((sum,l) => sum + (Number(l.amount)||0), 0);
+                const net = deposits - withdrawals;
+                const piggyBalance = getPiggyBalanceAtEndOfMonth(year, index);
+                const txs = (appState.transactions || []).filter(t => t.date && t.date.startsWith(prefix));
+                const liquidBalance = txs.reduce((sum, t) => sum + (t.type === 'income' ? Number(t.amount)||0 : t.type === 'expense' ? -(Number(t.amount)||0) : 0), 0);
+                if (monthLogs.length || txs.length) hasAny = true;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="py-2">${months[index]}</td><td class="py-2 text-right font-semibold ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${net >= 0 ? '+' : '-'} ${formatCurr(Math.abs(net))}</td><td class="py-2 text-right font-bold text-blue-400">${formatCurr(piggyBalance)}</td><td class="py-2 text-right font-bold text-gold-500">${formatCurr(liquidBalance)}</td>`;
+                body.appendChild(tr);
+            }
+            if (!hasAny) body.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">Ainda não há movimentações registradas desde setembro.</td></tr>';
+        }
+
+        function initPiggyMonthFilter() {
+            const now = new Date();
+            document.getElementById('piggyMonthFilter').value = String(now.getMonth());
+            const yearSelect = document.getElementById('piggyYearFilter');
+            yearSelect.innerHTML = '';
+            for (let y = now.getFullYear() - 5; y <= now.getFullYear() + 1; y++) {
+                const opt = document.createElement('option'); opt.value = String(y); opt.textContent = String(y);
+                if (y === now.getFullYear()) opt.selected = true;
+                yearSelect.appendChild(opt);
+            }
+        }
+
+        function renderPiggyMonthly() {
+            const monthEl = document.getElementById('piggyMonthFilter');
+            const yearEl = document.getElementById('piggyYearFilter');
+            if (!monthEl || !yearEl) return;
+            const month = Number(monthEl.value), year = Number(yearEl.value);
+            const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
+            const logs = (appState.piggyLogs || []).filter(l => (l.date || '').startsWith(prefix)).sort((a,b) => new Date(b.date) - new Date(a.date));
+            const deposits = logs.filter(l => l.type === 'deposit' || l.type === 'transfer_in').reduce((sum,l) => sum + (Number(l.amount)||0), 0);
+            const withdrawals = logs.filter(l => l.type === 'withdraw' || l.type === 'transfer_out').reduce((sum,l) => sum + (Number(l.amount)||0), 0);
+            const isCurrent = new Date().getFullYear() === year && new Date().getMonth() === month;
+            document.getElementById('piggyMonthlySummary').innerHTML = `
+                <div class="rounded-xl bg-dark-bg border border-dark-border p-3"><div class="text-xs text-gray-400">Entradas nos cofrinhos</div><div class="text-lg font-bold text-emerald-400 mt-1">${formatCurr(deposits)}</div></div>
+                <div class="rounded-xl bg-dark-bg border border-dark-border p-3"><div class="text-xs text-gray-400">Saídas dos cofrinhos</div><div class="text-lg font-bold text-rose-400 mt-1">${formatCurr(withdrawals)}</div></div>
+                <div class="rounded-xl bg-dark-bg border border-dark-border p-3"><div class="text-xs text-gray-400">Status do mês</div><div class="text-sm font-bold ${isCurrent ? 'text-gold-500' : 'text-gray-400'} mt-2">${isCurrent ? 'Mês atual • aberto' : 'Mês fechado • somente consulta'}</div></div>`;
+            const body = document.getElementById('piggyMonthlyBody');
+            body.innerHTML = '';
+            if (!logs.length) { body.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">Nenhuma movimentação neste mês.</td></tr>'; return; }
+            logs.forEach(l => {
+                const piggy = appState.piggybanks.find(p => p.id === l.piggyId);
+                const plus = l.type === 'deposit' || l.type === 'transfer_in';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="py-2">${piggy ? piggy.name : 'Cofrinho removido'}</td><td class="py-2">${l.desc || l.type}</td><td class="py-2 text-gray-400">${formatDate(l.date)}</td><td class="py-2 text-right font-semibold ${plus ? 'text-emerald-400' : 'text-rose-400'}">${plus ? '+' : '-'} ${formatCurr(l.amount)}</td>`;
+                body.appendChild(tr);
+            });
+        }
+
+        // PIGGYBANKS MANAGEMENT
+        function renderPiggybanks() {
+            const grid = document.getElementById('piggyGrid');
+            grid.innerHTML = '';
+
+            if (appState.piggybanks.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-dark-card border border-dark-border rounded-2xl text-gray-500">
+                        <i class="fa-solid fa-piggy-bank text-4xl mb-3 text-gray-600"></i>
+                        <p>Nenhum cofrinho criado. Guarde dinheiro com segurança.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            appState.piggybanks.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'bg-dark-card border border-dark-border rounded-2xl p-6 relative flex flex-col justify-between hover:border-gold-500/30 transition';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gold-500/10 text-gold-500 flex items-center justify-center text-2xl">
+                                <i class="fa-solid ${p.icon || 'fa-piggy-bank'}"></i>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button onclick="editPiggy('${p.id}')" class="text-gray-500 hover:text-white p-1 text-xs"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deletePiggy('${p.id}')" class="text-gray-500 hover:text-rose-400 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <h4 class="text-base font-bold text-white mb-1">${p.name}</h4>
+                        ${p.desc ? `<p class="text-xs text-gray-400 mb-2">${p.desc}</p>` : ''}
+                        <div class="text-2xl font-bold text-gold-500 tracking-tight mb-3">${formatCurr(p.amount)}</div>
+                        ${Number(p.target) > 0 ? `<div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Progresso da meta</span><span class="text-emerald-400 font-semibold">${Math.min(100, Math.round((Number(p.amount || 0) / Number(p.target)) * 100))}%</span></div><div class="w-full bg-dark-border h-2 rounded-full overflow-hidden mb-2"><div class="bg-emerald-500 h-full" style="width:${Math.min(100, (Number(p.amount || 0) / Number(p.target)) * 100)}%"></div></div><div class="text-xs text-gray-400 mb-2">Meta: ${formatCurr(p.target)} • Falta: ${formatCurr(Math.max(0, Number(p.target) - Number(p.amount || 0)))}</div>` : '<p class="text-xs text-gray-500 mb-2">Sem valor-alvo definido</p>'}
+                        ${p.deadline ? `<p class="text-[11px] text-gray-500 mb-2">Prazo: ${formatDate(p.deadline)}</p>` : ''}
+                    </div>
+                    
+                    <div class="space-y-2 pt-4 border-t border-dark-border/50">
+                        <button onclick="openPiggyTxModal('${p.id}')" class="w-full bg-gold-500 hover:bg-gold-600 text-black font-semibold py-2 rounded-xl text-xs transition">
+                            Movimentar / Transferir
+                        </button>
+                        <button onclick="openPiggyHistModal('${p.id}')" class="w-full bg-dark-bg hover:bg-dark-border text-gray-300 py-1.5 rounded-xl text-xs transition">
+                            Ver Histórico
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            renderPiggyMonthly();
+        }
+
+        function openPiggyModal(id = null) {
+            document.getElementById('piggyForm').reset();
+            document.getElementById('piggyId').value = id || '';
+            document.getElementById('piggyModalTitle').textContent = id ? 'Editar Cofrinho / Meta' : 'Novo Cofrinho / Meta';
+            const initialLabel = document.getElementById('piggyInitialLabel');
+            if (initialLabel) initialLabel.textContent = id ? 'Saldo Atual (R$)' : 'Saldo Inicial (R$)';
+
+            if (id) {
+                const p = appState.piggybanks.find(x => x.id === id);
+                if (p) {
+                    document.getElementById('piggyName').value = p.name;
+                    document.getElementById('piggyInitial').value = p.amount;
+                    document.getElementById('piggyTarget').value = p.target || '';
+                    document.getElementById('piggyDeadline').value = p.deadline || '';
+                    document.getElementById('piggyDesc').value = p.desc || '';
+                    document.getElementById('piggyIcon').value = p.icon;
+                }
+            }
+
+            document.getElementById('piggyModal').classList.remove('hidden');
+        }
+
+        function closePiggyModal() {
+            document.getElementById('piggyModal').classList.add('hidden');
+        }
+
+        function savePiggybank(e) {
+            e.preventDefault();
+            const id = document.getElementById('piggyId').value;
+            const name = document.getElementById('piggyName').value;
+            const initial = parseFloat(document.getElementById('piggyInitial').value) || 0;
+            const target = parseFloat(document.getElementById('piggyTarget').value) || 0;
+            const deadline = document.getElementById('piggyDeadline').value;
+            const desc = document.getElementById('piggyDesc').value.trim();
+            const icon = document.getElementById('piggyIcon').value;
+
+            if (id) {
+                const p = appState.piggybanks.find(x => x.id === id);
+                if (p) {
+                    const previousAmount = Number(p.amount) || 0;
+                    const delta = initial - previousAmount;
+                    p.name = name;
+                    p.amount = initial;
+                    p.target = target;
+                    p.deadline = deadline;
+                    p.desc = desc;
+                    p.icon = icon;
+                    if (Math.abs(delta) > 0.009) {
+                        appState.piggyLogs = appState.piggyLogs || [];
+                        appState.piggyLogs.push({ id: 'pl_' + Date.now(), piggyId: id, type: delta > 0 ? 'deposit' : 'withdraw', amount: Math.abs(delta), desc: 'Ajuste de saldo do cofrinho', date: new Date().toISOString().split('T')[0] });
+                    }
+                }
+            } else {
+                const newId = 'p_' + Date.now();
+                appState.piggybanks.push({ id: newId, name, amount: initial, target, deadline, desc, icon });
+                appState.piggyLogs = appState.piggyLogs || [];
+                appState.piggyLogs.push({
+                    id: 'pl_' + Date.now(),
+                    piggyId: newId,
+                    type: 'deposit',
+                    amount: initial,
+                    desc: 'Aporte Inicial',
+                    date: new Date().toISOString().split('T')[0]
+                });
+            }
+
+            saveData();
+            closePiggyModal();
+            renderPiggybanks();
+            updateDashboard();
+            showToast('Cofrinho salvo com sucesso!');
+        }
+
+        function editPiggy(id) { openPiggyModal(id); }
+
+        function deletePiggy(id) {
+            if (confirm('Deseja excluir este cofrinho? O valor retornará ao saldo.')) {
+                appState.piggybanks = appState.piggybanks.filter(p => p.id !== id);
+                appState.piggyLogs = appState.piggyLogs.filter(l => l.piggyId !== id);
+                saveData();
+                renderPiggybanks();
+                updateDashboard();
+                showToast('Cofrinho excluído.', 'error');
+            }
+        }
+
+        // Piggybank Deposit/Withdraw/Transfer Operations
+        function openPiggyTxModal(piggyId) {
+            document.getElementById('piggyTxForm').reset();
+            document.getElementById('piggyTxSourceId').value = piggyId;
+
+            const targetSelect = document.getElementById('piggyTxTargetId');
+            targetSelect.innerHTML = '';
+            appState.piggybanks.filter(p => p.id !== piggyId).forEach(p => {
+                targetSelect.innerHTML += `<option value="${p.id}">${p.name} (${formatCurr(p.amount)})</option>`;
+            });
+
+            togglePiggyTxFields();
+            document.getElementById('piggyTxModal').classList.remove('hidden');
+        }
+
+        function closePiggyTxModal() {
+            document.getElementById('piggyTxModal').classList.add('hidden');
+        }
+
+        function togglePiggyTxFields() {
+            const type = document.getElementById('piggyTxType').value;
+            const targetGroup = document.getElementById('targetPiggyGroup');
+            if (type === 'transfer') {
+                targetGroup.classList.remove('hidden');
+            } else {
+                targetGroup.classList.add('hidden');
+            }
+        }
+
+        function savePiggyTransaction(e) {
+            e.preventDefault();
+            const sourceId = document.getElementById('piggyTxSourceId').value;
+            const type = document.getElementById('piggyTxType').value;
+            const amount = parseFloat(document.getElementById('piggyTxAmount').value);
+            const desc = document.getElementById('piggyTxDesc').value || 'Movimentação';
+            // Usa o mês/ano selecionados na Organização mensal para registrar a movimentação.
+            // Assim, um aporte lançado em novembro fica em novembro, sem alterar outubro.
+            const selectedMonth = document.getElementById('piggyMonthFilter');
+            const selectedYear = document.getElementById('piggyYearFilter');
+            const now = new Date();
+            const chosenMonth = selectedMonth ? Number(selectedMonth.value) : now.getMonth();
+            const chosenYear = selectedYear ? Number(selectedYear.value) : now.getFullYear();
+            const chosenDay = Math.min(now.getDate(), new Date(chosenYear, chosenMonth + 1, 0).getDate());
+            const today = `${chosenYear}-${String(chosenMonth + 1).padStart(2, '0')}-${String(chosenDay).padStart(2, '0')}`;
+
+            const source = appState.piggybanks.find(p => p.id === sourceId);
+            if (!source) return;
+
+            if (type === 'deposit') {
+                source.amount += amount;
+                appState.piggyLogs.push({ id: Date.now().toString(), piggyId: sourceId, type: 'deposit', amount, desc, date: today });
+            } else if (type === 'withdraw') {
+                if (source.amount < amount) {
+                    alert('Saldo insuficiente neste cofrinho!');
+                    return;
+                }
+                source.amount -= amount;
+                appState.piggyLogs.push({ id: Date.now().toString(), piggyId: sourceId, type: 'withdraw', amount, desc, date: today });
+            } else if (type === 'transfer') {
+                const targetId = document.getElementById('piggyTxTargetId').value;
+                const target = appState.piggybanks.find(p => p.id === targetId);
+                if (!target) {
+                    alert('Selecione um cofrinho de destino.');
+                    return;
+                }
+                if (source.amount < amount) {
+                    alert('Saldo insuficiente para transferir!');
+                    return;
+                }
+
+                source.amount -= amount;
+                target.amount += amount;
+
+                appState.piggyLogs.push({ id: Date.now().toString(), piggyId: sourceId, type: 'transfer_out', amount, desc: `Transf. para ${target.name}`, date: today });
+                appState.piggyLogs.push({ id: (Date.now() + 1).toString(), piggyId: targetId, type: 'transfer_in', amount, desc: `Transf. de ${source.name}`, date: today });
+            }
+
+            saveData();
+            closePiggyTxModal();
+            renderPiggybanks();
+            updateDashboard();
+            showToast('Movimentação concluída!');
+        }
+
+        function openPiggyHistModal(piggyId) {
+            const p = appState.piggybanks.find(x => x.id === piggyId);
+            if (!p) return;
+
+            document.getElementById('piggyHistTitle').textContent = `Histórico - ${p.name}`;
+            const tbody = document.getElementById('piggyHistBody');
+            tbody.innerHTML = '';
+
+            const logs = appState.piggyLogs.filter(l => l.piggyId === piggyId).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-500">Nenhum histórico registrado.</td></tr>`;
+            } else {
+                logs.forEach(l => {
+                    const isPlus = l.type === 'deposit' || l.type === 'transfer_in';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="py-2 text-gray-400">${formatDate(l.date)}</td>
+                            <td class="py-2 uppercase text-[10px] font-bold ${isPlus ? 'text-emerald-400' : 'text-rose-400'}">${l.type}</td>
+                            <td class="py-2 text-gray-200">${l.desc}</td>
+                            <td class="py-2 text-right font-semibold ${isPlus ? 'text-emerald-400' : 'text-rose-400'}">
+                                ${isPlus ? '+' : '-'} ${formatCurr(l.amount)}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            document.getElementById('piggyHistModal').classList.remove('hidden');
+        }
+
+        function closePiggyHistModal() {
+            document.getElementById('piggyHistModal').classList.add('hidden');
+        }
+
+        // CENTRAL HISTORY TABLE
+        function renderHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const search = document.getElementById('histSearch').value.toLowerCase();
+            const filterType = document.getElementById('histTypeFilter').value;
+
+            let items = [];
+
+            appState.transactions.forEach(t => {
+                items.push({
+                    id: t.id,
+                    source: 'tx',
+                    type: t.type,
+                    desc: t.desc,
+                    category: t.category + (t.method ? ` (${t.method})` : ''),
+                    date: t.date,
+                    amount: t.amount
+                });
+            });
+
+            if (filterType === 'all' || filterType === 'piggy') {
+                appState.piggyLogs.forEach(l => {
+                    const piggy = appState.piggybanks.find(p => p.id === l.piggyId);
+                    items.push({
+                        id: l.id,
+                        source: 'piggy',
+                        type: 'piggy',
+                        desc: `${l.desc} [${piggy ? piggy.name : 'Cofrinho'}]`,
+                        category: `Cofrinho (${l.type})`,
+                        date: l.date,
+                        amount: l.amount
+                    });
+                });
+            }
+
+            items = items.filter(i => {
+                const matchSearch = i.desc.toLowerCase().includes(search) || i.category.toLowerCase().includes(search);
+                const matchType = filterType === 'all' || i.type === filterType;
+                return matchSearch && matchType;
+            });
+
+            items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">Nenhum registro encontrado.</td></tr>`;
+                return;
+            }
+
+            items.forEach(i => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-dark-hover transition';
+
+                let badge = '';
+                let amountClass = '';
+                let prefix = '';
+
+                if (i.type === 'income') {
+                    badge = `<span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><i class="fa-solid fa-arrow-down text-[9px]"></i><span>Entrada</span></span>`;
+                    amountClass = 'text-emerald-400';
+                    prefix = '+ ';
+                } else if (i.type === 'expense') {
+                    badge = `<span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20"><i class="fa-solid fa-arrow-up text-[9px]"></i><span>Gasto</span></span>`;
+                    amountClass = 'text-rose-400';
+                    prefix = '- ';
+                } else {
+                    badge = `<span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20"><i class="fa-solid fa-piggy-bank text-[9px]"></i><span>Cofrinho</span></span>`;
+                    amountClass = 'text-blue-400';
+                    prefix = '• ';
+                }
+
+                tr.innerHTML = `
+                    <td class="p-3">${badge}</td>
+                    <td class="p-3 font-medium text-white">${i.desc}</td>
+                    <td class="p-3 text-gray-400">${i.category}</td>
+                    <td class="p-3 text-gray-400">${formatDate(i.date)}</td>
+                    <td class="p-3 text-right font-semibold ${amountClass}">${prefix}${formatCurr(i.amount)}</td>
+                    <td class="p-3 text-center">
+                        ${i.source === 'tx' ? `<button onclick="deleteTransaction('${i.id}')" class="text-gray-500 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-gray-600">-</span>'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // BACKUP SYSTEM (EXPORT / IMPORT JSON)
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_felipe_fernandes_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Backup JSON exportado com sucesso!');
+        }
+
+        function importData(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported && (imported.transactions || imported.piggybanks)) {
+                        appState = imported;
+                        saveData();
+                        updateDashboard();
+                        showToast('Dados importados com sucesso!');
+                    } else {
+                        alert('Formato de arquivo JSON inválido.');
+                    }
+                } catch(err) {
+                    alert('Erro ao ler o arquivo JSON.');
+                }
+            };
+            if (event.target.files[0]) {
+                reader.readAsText(event.target.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
